@@ -40,7 +40,7 @@ const resolvePromise = (promise2, x, resolve, reject) => {
 }
 
 class Promise {
-  constructor(executor) {
+  constructor(executor) {  // executor执行器要立刻执行
     this.status = PENDING;
     this.value = undefined;
     this.reason = undefined;
@@ -52,7 +52,7 @@ class Promise {
         return value.then(resolve,reject)
       }
 
-      if(this.status ===  PENDING) {
+      if(this.status ===  PENDING) { // 状态只能从PENDING到FULFILLED/REJECTED，并且一旦变到了FULFILLED/REJECTED就不可再变
         this.status = FULFILLED;
         this.value = value;
         this.onResolvedCallbacks.forEach(fn=>fn());
@@ -78,7 +78,7 @@ class Promise {
     onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : v => v; // 做值传递，如果then不传参数，就把结果传给下一个then/catch
     onRejected = typeof onRejected === 'function' ? onRejected : err => { throw err };
     let promise2 = new Promise((resolve, reject) => { // then中要返回一个promise
-      if (this.status === FULFILLED) {
+      if (this.status === FULFILLED) { // 走到这，说明excutor中跑的是同步代码 且成功
         setTimeout(() => { // 加settimeout原因：规范规定onFulfilled, onRejected不能在当前上下文（context）执行；也就是说then是异步执行的；
           try { // 加try catch原因：捕获onFulfilled, onRejected中的错误
             let x = onFulfilled(this.value); // x等价于 在使用时then第一个参数return的值
@@ -89,7 +89,7 @@ class Promise {
         }, 0);
       }
 
-      if (this.status === REJECTED) {
+      if (this.status === REJECTED) { // 同步代码 失败
         setTimeout(() => {
           try {
             let x = onRejected(this.reason);
@@ -100,8 +100,8 @@ class Promise {
         }, 0);
       }
 
-      if (this.status === PENDING) {
-        this.onResolvedCallbacks.push(() => {
+      if (this.status === PENDING) { // 走到这说明excutor跑的是异步代码
+        this.onResolvedCallbacks.push(() => { // 这里包层函数是为了给onFulfilled传this.value
           setTimeout(() => {
             try {
               let x = onFulfilled(this.value);
