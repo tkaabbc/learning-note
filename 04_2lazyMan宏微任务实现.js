@@ -28,11 +28,6 @@
 // constructor中的同步代码（settimeout中的不会执行） --> eat("dinner")中的同步代码 --> sleep(5)中的同步代码
 // 一句话就是先往this.tasks中加好任务，利用settimeout在下一个事件循环启动任务
 
-// 参考
-// http://natumsol.men/lazyman/
-// https://juejin.cn/post/6844903791188246541
-// 另外有一个不自己写任务队列的实现在2中
-
 class MyLazyMan {
   constructor(arg) {
     this.tasks = []
