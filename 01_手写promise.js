@@ -25,8 +25,10 @@
 //    2.Promise内部抛出的错误，不会反应到外部，只能promise提供的回调api捕获
 
 // 主流程总结：
-// new Promise中的代码会立即执行
-// 用到发布订阅模式：then/catch传的方法会被加入回调队列中，等resolve/reject触发时才执行这些回调
+// 第一步.new Promise中的代码executor要立即执行
+// 第二步.实现then()用到发布订阅模式：分两种情况
+//  1.executor为异步时，then/catch传的方法会被加入回调队列中，等resolve/reject触发时才执行这些回调
+//  2.executor为同步时，then中传的方法直接执行就行
 
 const PENDING = 'PENDING';
 const FULFILLED = 'FULFILLED';
@@ -60,17 +62,17 @@ const resolvePromise = (promise2, x, resolve, reject) => {
       reject(e)
     }
   } else {
-    resolve(x)
+    resolve(x) // 如果不用考虑promise的情况直接执行这行就行
   }
 }
 
 class Promise {
-  constructor(executor) {  // executor执行器要立刻执行
+  constructor(executor) { // executor执行器要立刻执行
     this.status = PENDING;
-    this.value = undefined;
-    this.reason = undefined;
-    this.onResolvedCallbacks = [];
-    this.onRejectedCallbacks= [];
+    this.value = undefined; // 用来存传给resolve的值
+    this.reason = undefined; // 用来存失败原因
+    this.onResolvedCallbacks = []; // 用来存成功的回调
+    this.onRejectedCallbacks= []; // 用来存失败的回调
 
     let resolve = (value) => { // 只有resolve/reject这两个方法能改变promise的状态
       if(value instanceof Promise){ // 如果为promise，会等待这个promise执行完后再继续执行
@@ -103,7 +105,7 @@ class Promise {
     onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : v => v; // 做值传递，如果then不传参数，就把结果传给下一个then/catch
     onRejected = typeof onRejected === 'function' ? onRejected : err => { throw err };
     let promise2 = new Promise((resolve, reject) => { // then()要返回一个promise
-      if (this.status === FULFILLED) { // 走到这，说明excutor中跑的是同步代码 且成功
+      if (this.status === FULFILLED) { // 走到这，说明excutor中跑的是同步代码 且成功；直接执行成功的回调onFulfilled就行
         setTimeout(() => { // 加settimeout原因：规范规定onFulfilled, onRejected不能在当前上下文（context）执行；也就是说then是异步执行的；
           try { // 加try catch原因：捕获onFulfilled, onRejected中的错误
             let x = onFulfilled(this.value); // x等价于 在使用时then第一个参数return的值
@@ -125,7 +127,7 @@ class Promise {
         }, 0);
       }
 
-      if (this.status === PENDING) { // 走到这说明excutor跑的是异步代码
+      if (this.status === PENDING) { // 走到这说明excutor跑的是异步代码；与同步的唯一区别是要把成功的回调推入onResolvedCallbacks栈中，等异步成功后在resolve中清空栈
         this.onResolvedCallbacks.push(() => { // 这里包层函数是为了给onFulfilled传this.value
           setTimeout(() => {
             try {
