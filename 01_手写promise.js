@@ -129,7 +129,7 @@ class Promise {
 
       if (this.status === PENDING) { // 走到这说明excutor跑的是异步代码；与同步的唯一区别是要把成功的回调推入onResolvedCallbacks栈中，等异步成功后在resolve中清空栈
         this.onResolvedCallbacks.push(() => { // 这里包层函数是为了给onFulfilled传this.value
-          setTimeout(() => {
+          setTimeout(() => { // setTimeout是为了模拟promise的微任务
             try {
               let x = onFulfilled(this.value);
               resolvePromise(promise2, x, resolve, reject);
