@@ -17,7 +17,7 @@ function clone(target, map = new Map()) {
     let cloneTarget = Array.isArray(target) ? [] : {};
 
     if (map.get(target)) {
-      return map.get(target);
+      return map.get(target); // 遇到循环引用直接返回自身
     }
     map.set(target, cloneTarget);
 

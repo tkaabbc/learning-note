@@ -209,8 +209,8 @@ class Promise {
   //    2.全部成功才成功，任何一个失败就reject抛出
   // 思路：
   //    1.forEach把所有的输入values调用一遍
-  //    2.非promise的value直接返回
-  //    3.成功结果的数量和输入的数量相等才resolve
+  //    2.resultArr记录每个promise成功的结果
+  //    3.每当有一个promise成功，就判断下成功的数量和输入的数量是否相等，相等就resolve
 
   static all(values) {
     if (!Array.isArray(values)) {

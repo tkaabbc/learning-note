@@ -33,9 +33,14 @@
 // https://juejin.cn/post/6844903791188246541
 // 另外有一个不自己写任务队列的实现在2中
 
+/**
+ * 思路
+ * 1.用任务队列存储声明的任务，在任务回调中用this.next()触发下一个任务的执行
+ * 2.this.next就是把队头的元素拿出来执行，所以有需要提前执行的任务就unshift到队头
+ */
 class MyLazyMan {
   constructor(arg) {
-    this.tasks = []
+    this.tasks = [] // 任务队列，先进先出
     this.tasks.push(
       () => {
         console.log(`Hi This is ${arg}`)
