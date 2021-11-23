@@ -205,7 +205,7 @@ class Promise {
   } 
 
   // all功能点：
-  //    1.all()返回值是个promise，通过then取到成功结果（数组）
+  //    1.all()返回一个个promise，通过then取到成功结果（数组）
   //    2.全部成功才成功，任何一个失败就reject抛出
   // 思路：
   //    1.forEach把所有的输入values调用一遍
