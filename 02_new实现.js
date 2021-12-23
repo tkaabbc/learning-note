@@ -29,9 +29,9 @@ if (typeof constructor !== 'function') {
   }
   //创建新的对象,关联构造函数的原型对象
   const _constructor = Object.create(constructor.prototype);
-  //执行构造函数
+  //执行构造函数, 并将第一步的对象作为构造函数的this上下文
   const obj = constructor.apply(_constructor, rest);
-  //如果构造函数执行结果是对象则返回执行结果
+  //如果构造函数执行结果是对象则返回执行结果, 如果没有返回对象则返回第一步传创建的对象
   if (typeof obj === 'object') {
       return obj;
   } else {
