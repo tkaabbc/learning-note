@@ -13,6 +13,11 @@
  * 1用一个map存下已经请求过的数据 记录返回值、多余的请求的promise.resolve回调
  * 2发起请求前判断状态，当遇到pending时，也返回个promise，但是把该promise的resolve推入队列中存起来，
  *  等请求回来后通知notify清空resolves队列
+ * 主要就是这几个部件
+ * cacheRequest // 判断有木有发过
+ * handleRequest // 发请求
+ * notify // 通知
+ * memo // 存结果
  * [
  *  url,
  *  {

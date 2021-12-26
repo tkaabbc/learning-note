@@ -21,7 +21,8 @@ console.log(typeof a)
 /**
  * 思路
  * 1利用闭包存每次调用的参数
- * 2最后一次不传参数就表示要return计算结果
+ * 2若传参则返回函数本身
+ * 3若不传参数就表示要return计算结果
  */
 const operate = (...args) => {
   let params = [...args]

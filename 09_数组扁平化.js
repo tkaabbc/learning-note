@@ -16,3 +16,4 @@ function myFlat(arr) {
   return result
 }
 console.log(myFlat(a));
+// todo 非递归版本

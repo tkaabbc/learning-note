@@ -36,7 +36,7 @@ bindSay(2)
 //      然后call和apply只有接受参数不同，其它实现一样
 Function.prototype.mycall = function (context, ...args) {
   context = context || window
-  context.fn = this
+  context.fn = this // 这个this为调用mycall的函数
   const result = context.fn(...args)
   delete context.fn
   return result

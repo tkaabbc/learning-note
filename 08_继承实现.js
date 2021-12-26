@@ -10,6 +10,13 @@
  */
 
 // 寄生式组合继承 （这是最优的方式，背这个，考试写这个）
+// 理解了原型链顺序和new之后，再回过头看继承就一目了然了
+/**
+ * 思路
+ * 1继承父属性
+ * 2继承父方法
+ * 3保正constructor指向正确
+ */
 function Person(name, age) {
   this.name = name, // 定义父类上的属性
   this.age = age
