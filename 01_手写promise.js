@@ -103,7 +103,7 @@ class Promise {
 
   then(onFulfilled, onRejected) {
     onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : v => v; // 做值传递，如果then不传参数，就把结果传给下一个then/catch
-    onRejected = typeof onRejected === 'function' ? onRejected : err => { throw err };
+    onRejected = typeof onRejected === 'function' ? onRejected : err => { throw err }; // 做值传递，如果then不传参数，就把结果传给下一个then/catch
     let promise2 = new Promise((resolve, reject) => { // then()要返回一个promise
       if (this.status === FULFILLED) { // 走到这，说明excutor中跑的是同步代码 且成功；直接执行成功的回调onFulfilled就行
         setTimeout(() => { // 加settimeout原因：规范规定onFulfilled, onRejected不能在当前上下文（context）执行；也就是说then是异步执行的；
@@ -218,9 +218,10 @@ class Promise {
       return new TypeError(`TypeError: ${type} ${values} is not iterable`)
     }
 
+    // 核心思路 all返回的也是一个promise 1数组存下结果，2并计数，所有都返回则resolve
     return new Promise((resolve, reject) => {
-      let resultArr = [];
-      let orderIndex = 0; // 用来计数结果个数
+      let resultArr = []; // 关键
+      let orderIndex = 0; // 关键 用来计数结果个数
       const processResultByKey = (value, index) => { // 用来记录结果
         resultArr[index] = value;
         if (++orderIndex === values.length) { // 结果都好了再resolve
