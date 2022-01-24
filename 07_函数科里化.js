@@ -40,3 +40,24 @@ const operate = (...args) => {
 console.log(operate(1, 2)(3, 5, 2)())
 
 // 意义应用参考https://www.zhangxinxu.com/wordpress/2013/02/js-currying/
+
+/**
+ * ByteDance题
+ * fn(1, 2, 3)经过curry(fn)后支持fn(1)(2)(3)
+ * 核心: 闭包 + fn.length
+ * fn.length表示函数定义参数的个数，知道这个就不用多一次调用了
+ * @param {*} fn 
+ * @returns 
+ */
+const curry = (fn) => {
+  let params = []
+  const curriedFn = (...args) => {
+    params = [...params, ...args]
+    if (params.length === fn.length) {
+      return fn(...params)
+    } else {
+      return curriedFn
+    }
+  }
+  return curriedFn
+}
