@@ -39,7 +39,9 @@ function flattenObj(obj) {
       result[prevKey] = value
     }
   }
-  helper('', obj)
+  for (const [key, val] of Object.entries(obj)) {
+    helper(key, val)
+  }
   return result
 }
 // todo 第一个点要去掉
