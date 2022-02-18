@@ -44,5 +44,4 @@ function flattenObj(obj) {
   }
   return result
 }
-// todo 第一个点要去掉
 console.log(flattenObj(entryObj));
